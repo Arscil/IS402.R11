@@ -1,0 +1,3 @@
+label,file,format,size_mb,concurrency,upload_sec,upload_mbps,download_sec,download_mbps,pandas_read_sec
+laptop_gb,creditcard_x15.csv,csv,2325.0,4,148.21,15.69,67.29,34.55,5.05
+laptop_gb,creditcard_x15.parquet,parquet,1051.0,4,89.88,11.69,36.17,29.06,2.07

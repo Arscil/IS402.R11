@@ -1,0 +1,6 @@
+# Thư viện cho các script trong cloud/ (chạy được trên Windows, không cần TFF)
+azure-storage-blob>=12.19
+azure-identity>=1.15
+pandas>=2.0
+pyarrow>=14
+matplotlib>=3.7

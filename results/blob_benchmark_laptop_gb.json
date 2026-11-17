@@ -1,0 +1,30 @@
+{
+  "account": "stis402flfraud",
+  "machine": "Windows-11-10.0.26200-SP0",
+  "rows": [
+    {
+      "label": "laptop_gb",
+      "file": "creditcard_x15.csv",
+      "format": "csv",
+      "size_mb": 2325.0,
+      "concurrency": 4,
+      "upload_sec": 148.21,
+      "upload_mbps": 15.69,
+      "download_sec": 67.29,
+      "download_mbps": 34.55,
+      "pandas_read_sec": 5.05
+    },
+    {
+      "label": "laptop_gb",
+      "file": "creditcard_x15.parquet",
+      "format": "parquet",
+      "size_mb": 1051.0,
+      "concurrency": 4,
+      "upload_sec": 89.88,
+      "upload_mbps": 11.69,
+      "download_sec": 36.17,
+      "download_mbps": 29.06,
+      "pandas_read_sec": 2.07
+    }
+  ]
+}

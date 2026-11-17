@@ -1,0 +1,102 @@
+{
+  "run_id": "20261117T065101Z",
+  "source_blob": "raw/incoming/creditcard_run2.csv",
+  "source_bytes": 150828752,
+  "timings_sec": {
+    "extract": 0.52,
+    "transform": 1.16,
+    "load": 9.45,
+    "total": 11.13
+  },
+  "outputs": {
+    "train.npz": 25408857,
+    "test.npz": 6353170,
+    "clients_iid.npz": 25410855,
+    "clients_noniid.npz": 25409946,
+    "scaler.pkl": 498,
+    "test.parquet": 9861823,
+    "clients_iid/client_1.parquet": 7897406,
+    "clients_iid/client_2.parquet": 7899001,
+    "clients_iid/client_3.parquet": 7896602,
+    "clients_iid/client_4.parquet": 7895070,
+    "clients_iid/client_5.parquet": 7897148,
+    "clients_noniid/client_1.parquet": 6702941,
+    "clients_noniid/client_2.parquet": 9122151,
+    "clients_noniid/client_3.parquet": 11845619,
+    "clients_noniid/client_4.parquet": 5670227,
+    "clients_noniid/client_5.parquet": 6105886
+  },
+  "rows_in": 284807,
+  "duplicates_removed": 1081,
+  "rows_clean": 283726,
+  "fraud_clean": 473,
+  "train_rows": 226980,
+  "train_fraud": 378,
+  "test_rows": 56746,
+  "test_fraud": 95,
+  "scaler": "StandardScaler",
+  "clients_iid": [
+    {
+      "client": 1,
+      "total": 45396,
+      "fraud": 75,
+      "fraud_pct": 0.1652
+    },
+    {
+      "client": 2,
+      "total": 45396,
+      "fraud": 75,
+      "fraud_pct": 0.1652
+    },
+    {
+      "client": 3,
+      "total": 45396,
+      "fraud": 76,
+      "fraud_pct": 0.1674
+    },
+    {
+      "client": 4,
+      "total": 45396,
+      "fraud": 76,
+      "fraud_pct": 0.1674
+    },
+    {
+      "client": 5,
+      "total": 45396,
+      "fraud": 76,
+      "fraud_pct": 0.1674
+    }
+  ],
+  "clients_noniid": [
+    {
+      "client": 1,
+      "total": 38510,
+      "fraud": 149,
+      "fraud_pct": 0.3869
+    },
+    {
+      "client": 2,
+      "total": 52428,
+      "fraud": 31,
+      "fraud_pct": 0.0591
+    },
+    {
+      "client": 3,
+      "total": 68097,
+      "fraud": 46,
+      "fraud_pct": 0.0676
+    },
+    {
+      "client": 4,
+      "total": 32855,
+      "fraud": 78,
+      "fraud_pct": 0.2374
+    },
+    {
+      "client": 5,
+      "total": 35090,
+      "fraud": 74,
+      "fraud_pct": 0.2109
+    }
+  ]
+}
