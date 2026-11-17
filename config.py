@@ -33,6 +33,9 @@ NUM_FEATURES = len(FEATURE_COLUMNS)  # 30
 # Data preprocessing parameters
 TEST_SIZE = 0.20
 COLUMNS_TO_SCALE = ["Time", "Amount"]
+# Đề bài yêu cầu StandardScaler hoặc MinMaxScaler cho Time và Amount.
+# "standard" -> StandardScaler, "minmax" -> MinMaxScaler
+SCALER_TYPE = "standard"
 
 # Federated Learning Setup
 NUM_CLIENTS = 5
@@ -49,4 +52,28 @@ SERVER_LEARNING_RATE = 1.0
 HIDDEN_UNITS = [64, 32]
 ACTIVATION = "relu"
 OUTPUT_ACTIVATION = "sigmoid"
+
+# Centralized baseline training
+CENTRAL_EPOCHS = 10
+CENTRAL_BATCH_SIZE = 256
+CENTRAL_LEARNING_RATE = 0.001
+
+# Class weighting for the fraud class (dùng chung cho baseline và FL)
+USE_CLASS_WEIGHT = True
+
+# Evaluation
+DEFAULT_THRESHOLD = 0.5
+
+# Model and result files
+MODEL_NAMES = ["centralized", "fl_iid", "fl_noniid"]
+
+
+def model_file(name: str) -> Path:
+    """Keras model file for a given experiment name (e.g. 'fl_iid')."""
+    return MODELS_DIR / f"{name}.keras"
+
+
+def history_file(name: str) -> Path:
+    """Training history (JSON) for a given experiment name."""
+    return RESULTS_DIR / f"history_{name}.json"
 

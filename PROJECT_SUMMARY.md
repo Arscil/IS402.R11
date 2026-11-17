@@ -38,7 +38,7 @@ Nội dung chính cần thể hiện trong bài:
 | 2 | EDA ngắn: phân bố lớp, `Amount`, `Time` |
 | 3 | Tách X (30 đặc trưng) và y (`Class`) |
 | 4 | Chia train/test 80/20 bằng `stratify=y`, `random_state=42` |
-| 5 | Fit **RobustScaler** (hoặc StandardScaler) chỉ trên train, chỉ cho `Time` và `Amount`; áp dụng cho test. V1-V28 giữ nguyên |
+| 5 | Fit **StandardScaler** (theo đề bài; đổi sang MinMaxScaler bằng `config.SCALER_TYPE = "minmax"`) chỉ trên train, chỉ cho `Time` và `Amount`; áp dụng cho test. V1-V28 giữ nguyên |
 | 6 | Chia tập train thành 5 client, hai kịch bản: **IID** và **non-IID** |
 | 7 | Xử lý mất cân bằng bằng class weight, hoặc oversample cục bộ trong từng client sau khi chia |
 | 8 | Đóng gói đầu ra và bàn giao |

@@ -31,3 +31,6 @@ Thumbs.db
 .vscode/
 .idea/
 
+
+# Expanded dataset for cloud benchmarks (GB scale)
+data/expanded/

@@ -1,6 +1,6 @@
 """
 Data preparation script for Credit Card Fraud Detection.
-Performs data validation, train/test splitting, RobustScaler fitting,
+Performs data validation, train/test splitting, StandardScaler/MinMaxScaler fitting,
 and client partitioning (IID & Non-IID with Dirichlet distribution).
 Saves processed files to data/processed/ and visualization figures to results/.
 """
@@ -11,7 +11,7 @@ import pickle
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -20,6 +20,16 @@ import seaborn as sns
 # Ensure project root is in path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import config
+
+
+def make_scaler(scaler_type: str):
+    """Tạo scaler theo đề bài: StandardScaler (mặc định) hoặc MinMaxScaler."""
+    scaler_type = scaler_type.lower()
+    if scaler_type == "standard":
+        return StandardScaler()
+    if scaler_type == "minmax":
+        return MinMaxScaler()
+    raise ValueError(f"SCALER_TYPE không hợp lệ: '{scaler_type}'. Chọn 'standard' hoặc 'minmax'.")
 
 
 def run_pipeline():
@@ -108,11 +118,11 @@ def run_pipeline():
     print(f"  -> Train set: {X_train.shape[0]:,} mẫu | Gian lận: {int(np.sum(y_train == 1)):,}")
     print(f"  -> Test set:  {X_test.shape[0]:,} mẫu | Gian lận: {int(np.sum(y_test == 1)):,}")
 
-    # 4. Chuẩn hóa RobustScaler cho cột Time (index 0) và Amount (index 29)
-    print("\n[4/6] Fit RobustScaler chỉ trên tập Train (Time & Amount)...")
-    scale_indices = [0, 29]  # Cột 0: Time, Cột 29: Amount
-    
-    scaler = RobustScaler()
+    # 4. Chuẩn hóa Time (index 0) và Amount (index 29) theo yêu cầu đề bài
+    scaler = make_scaler(config.SCALER_TYPE)
+    print(f"\n[4/6] Fit {type(scaler).__name__} chỉ trên tập Train (Time & Amount)...")
+    scale_indices = [config.FEATURE_COLUMNS.index(c) for c in config.COLUMNS_TO_SCALE]
+
     # Fit và transform trên train
     X_train[:, scale_indices] = scaler.fit_transform(X_train[:, scale_indices])
     # Transform trên test
