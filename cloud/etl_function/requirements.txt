@@ -1,0 +1,7 @@
+# Ghim theo môi trường đã kiểm tra bằng test_etl_local.py (kết quả giống hệt prepare_data.py)
+azure-functions
+azure-storage-blob>=12.19,<13
+numpy==2.5.5
+pandas==3.1.1
+scikit-learn==1.7.2
+pyarrow==26.0.1

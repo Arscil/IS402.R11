@@ -1,0 +1,4 @@
+__pycache__/
+.venv/
+test_etl_local.py
+local.settings.json
