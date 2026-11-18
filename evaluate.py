@@ -11,6 +11,10 @@ Outputs (results/):
     fig_roc_pr_curves.png        ROC and Precision-Recall curves
     fig_training_curves.png      Train loss and test metrics per round / epoch
     fig_training_time.png        Training time per model
+    fig_threshold_tuning.png     Precision / Recall / F1 at 0.5 vs the F1-optimal threshold
+
+The F1-optimal threshold is chosen on a stratified validation slice of the TRAINING
+set (config.THRESHOLD_VAL_FRACTION), never on the test set.
 """
 
 import argparse
@@ -27,12 +31,14 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from sklearn.metrics import precision_recall_curve, roc_curve
+from sklearn.model_selection import train_test_split
 
 import config
 import data_utils
 import model_utils  # noqa: F401  (registers the custom loss for model loading)
 
-DISPLAY_NAMES = {"centralized": "Tập trung", "fl_iid": "FL-IID", "fl_noniid": "FL-non-IID"}
+DISPLAY_NAMES = {"centralized": "Tập trung", "fl_iid": "FL-IID", "fl_noniid": "FL-non-IID",
+                 "fl_iid_e3": "FL-IID (3 epoch cục bộ)", "fl_iid_e5": "FL-IID (5 epoch cục bộ)"}
 MAIN_METRICS = [("accuracy", "Accuracy"), ("precision", "Precision"), ("recall", "Recall"),
                 ("f1", "F1-Score"), ("pr_auc", "PR-AUC")]
 
@@ -57,21 +63,61 @@ def load_history(name):
         return json.load(f)
 
 
+def load_validation():
+    """Stratified slice of the TRAINING set used only to pick the decision threshold."""
+    X_train, y_train, _, _ = data_utils.load_data()
+    _, X_val, _, y_val = train_test_split(
+        X_train, y_train, test_size=config.THRESHOLD_VAL_FRACTION,
+        random_state=config.SEED, stratify=y_train)
+    return X_val, y_val
+
+
+def best_f1_threshold(y_true, y_prob) -> float:
+    """Threshold that maximises F1 on the given (validation) data."""
+    precision, recall, thresholds = precision_recall_curve(y_true, y_prob)
+    f1 = 2 * precision * recall / np.clip(precision + recall, 1e-12, None)
+    best = int(np.nanargmax(f1[:-1]))  # last point has no threshold
+    return float(thresholds[best])
+
+
+def plot_threshold_tuning(summary: pd.DataFrame, out: Path):
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.8))
+    x = np.arange(len(summary))
+    width = 0.38
+    for ax, key, title in zip(axes, ("precision", "recall", "f1"), ("Precision", "Recall", "F1-Score")):
+        b1 = ax.bar(x - width / 2, summary[key], width, label="Ngưỡng 0,5", color="#9aa5b1")
+        b2 = ax.bar(x + width / 2, summary[f"{key}_tuned"], width, label="Ngưỡng tối ưu F1", color="#2a6fdb")
+        ax.bar_label(b1, fmt="%.2f", fontsize=8, padding=2)
+        ax.bar_label(b2, fmt="%.2f", fontsize=8, padding=2)
+        ax.set_xticks(x)
+        ax.set_xticklabels(summary["model"], rotation=20, ha="right", fontsize=9)
+        ax.set_ylim(0, 1.12)
+        ax.set_title(title, fontweight="bold")
+        ax.grid(axis="y", linestyle="--", alpha=0.5)
+    axes[0].legend(fontsize=9)
+    fig.suptitle("Ảnh hưởng của việc chọn ngưỡng (chọn trên tập validation, đánh giá trên tập test)",
+                 fontweight="bold")
+    fig.tight_layout()
+    fig.savefig(out, dpi=200)
+    plt.close(fig)
+
+
 def plot_metrics_comparison(summary: pd.DataFrame, out: Path):
-    fig, ax = plt.subplots(figsize=(11, 5))
     n = len(summary)
+    fig, ax = plt.subplots(figsize=(max(11, 2.6 * n + 2), 5.4))
     width = 0.8 / max(n, 1)
     x = np.arange(len(MAIN_METRICS))
     for i, (_, row) in enumerate(summary.iterrows()):
         values = [row[key] for key, _ in MAIN_METRICS]
         bars = ax.bar(x + (i - (n - 1) / 2) * width, values, width, label=row["model"])
-        ax.bar_label(bars, fmt="%.3f", fontsize=8, padding=2)
+        ax.bar_label(bars, fmt="%.2f", fontsize=7 if n > 3 else 8, padding=2,
+                     rotation=90 if n > 3 else 0)
     ax.set_xticks(x)
     ax.set_xticklabels([title for _, title in MAIN_METRICS])
-    ax.set_ylim(0, 1.1)
+    ax.set_ylim(0, 1.18)
     ax.set_ylabel("Giá trị")
     ax.set_title("So sánh chỉ số trên tập test (ngưỡng 0,5)", fontweight="bold")
-    ax.legend()
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.08), ncol=min(n, 5), fontsize=9, frameon=False)
     ax.grid(axis="y", linestyle="--", alpha=0.5)
     fig.tight_layout()
     fig.savefig(out, dpi=200)
@@ -173,13 +219,20 @@ def main():
         raise SystemExit("Chưa có mô hình nào trong models/. Hãy chạy train_centralized.py "
                          "và train_federated.py trước.")
     _, _, X_test, y_test = data_utils.load_data()
-    print(f"Tập test: {len(y_test):,} mẫu, {int(y_test.sum())} gian lận")
+    X_val, y_val = load_validation()
+    print(f"Tập test: {len(y_test):,} mẫu, {int(y_test.sum())} gian lận | "
+          f"tập validation chọn ngưỡng: {len(y_val):,} mẫu, {int(y_val.sum())} gian lận")
 
     rows, curves, histories = [], [], {}
     for name in names:
         model = tf.keras.models.load_model(config.model_file(name), compile=False)
         prob = model.predict(X_test, batch_size=4096, verbose=0).ravel()
         metrics = model_utils.compute_metrics(y_test, prob, args.threshold)
+        val_prob = model.predict(X_val, batch_size=4096, verbose=0).ravel()
+        tuned_threshold = best_f1_threshold(y_val, val_prob)
+        tuned = model_utils.compute_metrics(y_test, prob, tuned_threshold)
+        metrics.update({f"{k}_tuned": tuned[k] for k in ("precision", "recall", "f1", "tp", "fp", "fn")})
+        metrics["threshold_tuned"] = tuned_threshold
         hist = load_history(name)
         if hist:
             histories[name] = hist
@@ -196,12 +249,17 @@ def main():
     plot_metrics_comparison(summary, config.RESULTS_DIR / "fig_metrics_comparison.png")
     plot_confusion_matrices(summary, config.RESULTS_DIR / "fig_confusion_matrices.png")
     plot_roc_pr(curves, y_test, config.RESULTS_DIR / "fig_roc_pr_curves.png")
+    plot_threshold_tuning(summary, config.RESULTS_DIR / "fig_threshold_tuning.png")
     if histories:
         plot_training_curves(histories, config.RESULTS_DIR / "fig_training_curves.png")
         plot_training_time(histories, config.RESULTS_DIR / "fig_training_time.png")
 
     cols = ["model", "accuracy", "precision", "recall", "f1", "roc_auc", "pr_auc", "tp", "fp", "fn"]
     print(summary[cols].to_string(index=False, float_format=lambda v: f"{v:.4f}"))
+    print("\nVới ngưỡng tối ưu F1 (chọn trên validation):")
+    cols_t = ["model", "threshold_tuned", "precision_tuned", "recall_tuned", "f1_tuned",
+              "tp_tuned", "fp_tuned", "fn_tuned"]
+    print(summary[cols_t].to_string(index=False, float_format=lambda v: f"{v:.4f}"))
     print(f"Đã lưu bảng và biểu đồ vào: {config.RESULTS_DIR}")
 
 

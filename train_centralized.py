@@ -49,10 +49,13 @@ def main():
     parser.add_argument("--epochs", type=int, default=config.CENTRAL_EPOCHS)
     parser.add_argument("--batch-size", type=int, default=config.CENTRAL_BATCH_SIZE)
     parser.add_argument("--lr", type=float, default=config.CENTRAL_LEARNING_RATE)
+    parser.add_argument("--class-weight", choices=["balanced", "sqrt", "none"],
+                        default=config.CLASS_WEIGHT_MODE)
+    parser.add_argument("--name", default="centralized", help="Experiment name")
     args = parser.parse_args()
 
     X_train, y_train, X_test, y_test = data_utils.load_data()
-    class_weights = data_utils.get_class_weights(y_train) if config.USE_CLASS_WEIGHT else None
+    class_weights = data_utils.get_class_weights(y_train, args.class_weight)
     print(f"Train: {X_train.shape} | Test: {X_test.shape} | class weights: {class_weights}")
 
     model = model_utils.build_keras_model()
@@ -60,9 +63,10 @@ def main():
                   loss=model_utils.make_loss(class_weights),
                   metrics=model_utils.make_keras_metrics())
 
-    log = {"name": "centralized", "type": "centralized", "step_unit": "epoch",
+    log = {"name": args.name, "type": "centralized", "step_unit": "epoch",
            "config": {"epochs": args.epochs, "batch_size": args.batch_size, "lr": args.lr,
-                      "class_weights": class_weights, "scaler": config.SCALER_TYPE},
+                      "class_weight_mode": args.class_weight, "class_weights": class_weights,
+                      "scaler": config.SCALER_TYPE},
            "machine": {"platform": platform.platform(), "cpu_count": os.cpu_count()},
            "steps": [], "_t0": time.perf_counter()}
 
@@ -73,12 +77,12 @@ def main():
 
     config.MODELS_DIR.mkdir(parents=True, exist_ok=True)
     config.RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    model.save(config.model_file("centralized"))
-    with open(config.history_file("centralized"), "w", encoding="utf-8") as f:
+    model.save(config.model_file(args.name))
+    with open(config.history_file(args.name), "w", encoding="utf-8") as f:
         json.dump(log, f, indent=2, ensure_ascii=False)
     print(f"Thời gian huấn luyện: {log['train_time_sec']} giây")
-    print(f"Đã lưu mô hình: {config.model_file('centralized')}")
-    print(f"Đã lưu lịch sử: {config.history_file('centralized')}")
+    print(f"Đã lưu mô hình: {config.model_file(args.name)}")
+    print(f"Đã lưu lịch sử: {config.history_file(args.name)}")
 
 
 if __name__ == "__main__":

@@ -41,6 +41,8 @@ def main():
     parser.add_argument("--batch-size", type=int, default=config.CLIENT_BATCH_SIZE)
     parser.add_argument("--client-lr", type=float, default=config.CLIENT_LEARNING_RATE)
     parser.add_argument("--server-lr", type=float, default=config.SERVER_LEARNING_RATE)
+    parser.add_argument("--class-weight", choices=["balanced", "sqrt", "none"],
+                        default=config.CLASS_WEIGHT_MODE)
     parser.add_argument("--name", default=None, help="Experiment name (default: fl_<scenario>)")
     args = parser.parse_args()
     name = args.name or f"fl_{args.scenario}"
@@ -53,7 +55,7 @@ def main():
 
     # Simplification of the simulation (ghi vào báo cáo): class weights are computed on the
     # union of client data. In a real deployment each client would only know its own ratio.
-    class_weights = data_utils.get_class_weights(y_train) if config.USE_CLASS_WEIGHT else None
+    class_weights = data_utils.get_class_weights(y_train, args.class_weight)
     element_spec = client_datasets[0].element_spec
     print(f"Kịch bản: {args.scenario} | {len(client_datasets)} client | class weights: {class_weights}")
     for s in client_stats:
@@ -79,7 +81,8 @@ def main():
            "config": {"rounds": args.rounds, "local_epochs": args.local_epochs,
                       "batch_size": args.batch_size, "client_lr": args.client_lr,
                       "server_lr": args.server_lr, "num_clients": len(client_datasets),
-                      "class_weights": class_weights, "scaler": config.SCALER_TYPE},
+                      "class_weight_mode": args.class_weight, "class_weights": class_weights,
+                      "scaler": config.SCALER_TYPE},
            "clients": client_stats,
            "machine": {"platform": platform.platform(), "cpu_count": os.cpu_count()},
            "steps": []}

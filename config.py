@@ -59,10 +59,16 @@ CENTRAL_BATCH_SIZE = 256
 CENTRAL_LEARNING_RATE = 0.001
 
 # Class weighting for the fraud class (dùng chung cho baseline và FL)
-USE_CLASS_WEIGHT = True
+# "balanced": trọng số gian lận ~300, "sqrt": ~24, "none": không dùng trọng số
+# Chốt "sqrt" theo thí nghiệm 17/11/2026 (results/exp_class_weight/): ở ngưỡng 0,5 F1 của
+# FL tăng từ 0,08-0,26 (balanced) lên 0,71-0,72; ngưỡng tối ưu cũng ít cực đoan hơn (0,91-0,97 so với >0,997).
+CLASS_WEIGHT_MODE = "sqrt"
 
 # Evaluation
 DEFAULT_THRESHOLD = 0.5
+# Tỉ lệ tập train (stratified) dùng làm tập validation để chọn ngưỡng tối ưu F1.
+# Không dùng tập test để chọn ngưỡng, tránh rò rỉ dữ liệu.
+THRESHOLD_VAL_FRACTION = 0.10
 
 # Model and result files
 MODEL_NAMES = ["centralized", "fl_iid", "fl_noniid"]

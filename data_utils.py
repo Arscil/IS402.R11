@@ -5,7 +5,7 @@ and compute class weights for imbalanced learning.
 """
 
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 import numpy as np
 import tensorflow as tf
 
@@ -113,17 +113,28 @@ def make_client_datasets(
     return client_datasets
 
 
-def get_class_weights(y: np.ndarray) -> Dict[int, float]:
+def get_class_weights(y: np.ndarray, mode: str = "balanced") -> Optional[Dict[int, float]]:
     """
-    Calculate balanced class weights to handle severe fraud imbalance.
-    weight_c = total_samples / (n_classes * count_c)
+    Class weights to handle severe fraud imbalance.
+
+    mode:
+        "balanced": weight_c = total_samples / (n_classes * count_c)
+                    (fraud weight ~300 on this dataset: very high recall, very low precision)
+        "sqrt":     weight_0 = 1, weight_1 = sqrt(count_0 / count_1)
+                    (fraud weight ~24: softer, trades a little recall for much better precision)
+        "none":     no weighting (returns None)
 
     Args:
         y: Binary labels array (0 and 1)
+        mode: "balanced", "sqrt" or "none"
 
     Returns:
-        Dictionary mapping class {0: weight_0, 1: weight_1}
+        Dictionary mapping class {0: weight_0, 1: weight_1}, or None for "none"
     """
+    mode = mode.lower()
+    if mode == "none":
+        return None
+
     y_flat = y.ravel().astype(int)
     n_samples = len(y_flat)
     n_classes = 2
@@ -133,8 +144,14 @@ def get_class_weights(y: np.ndarray) -> Dict[int, float]:
     if n_class_0 == 0 or n_class_1 == 0:
         raise ValueError("Cannot calculate class weights with only one class present.")
 
-    weight_0 = float(n_samples / (n_classes * n_class_0))
-    weight_1 = float(n_samples / (n_classes * n_class_1))
+    if mode == "balanced":
+        weight_0 = float(n_samples / (n_classes * n_class_0))
+        weight_1 = float(n_samples / (n_classes * n_class_1))
+    elif mode == "sqrt":
+        weight_0 = 1.0
+        weight_1 = float(np.sqrt(n_class_0 / n_class_1))
+    else:
+        raise ValueError(f"Unknown class weight mode '{mode}'. Choose balanced, sqrt or none.")
 
     return {0: weight_0, 1: weight_1}
 
