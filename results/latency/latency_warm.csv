@@ -1,0 +1,7 @@
+﻿region,mode,n,tx_per_request,mean_ms,p50_ms,p95_ms,min_ms,max_ms,server_p50_ms,per_tx_p50_ms
+eastasia,keepalive,100,1,46.3,44.3,48.8,42.4,188.8,0.112,44.349
+eastasia,batch100,20,100,54.7,54.9,62.9,47.3,64.0,0.49,0.549
+eastasia,newconn,100,1,145.2,143.8,167.4,127.6,190.8,0.166,143.758
+centralindia,keepalive,100,1,93.6,91.6,95.9,89.9,250.5,0.161,91.625
+centralindia,batch100,20,100,100.6,100.2,107.9,95.4,111.1,0.702,1.002
+centralindia,newconn,100,1,299.7,301.6,339.7,253.7,357.1,0.157,301.59

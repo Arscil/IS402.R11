@@ -1,0 +1,33 @@
+{
+  "label": "cold",
+  "measured_at": "2026-11-18T12:16:19+00:00",
+  "client": "laptop, Viet Nam",
+  "rows": [
+    {
+      "region": "eastasia",
+      "mode": "cold_first_request",
+      "n": 1,
+      "tx_per_request": 1,
+      "mean_ms": 4484.7,
+      "p50_ms": 4484.7,
+      "p95_ms": 4484.7,
+      "min_ms": 4484.7,
+      "max_ms": 4484.7,
+      "server_p50_ms": 1.059,
+      "per_tx_p50_ms": 4484.657
+    },
+    {
+      "region": "centralindia",
+      "mode": "cold_first_request",
+      "n": 1,
+      "tx_per_request": 1,
+      "mean_ms": 4333.0,
+      "p50_ms": 4333.0,
+      "p95_ms": 4333.0,
+      "min_ms": 4333.0,
+      "max_ms": 4333.0,
+      "server_p50_ms": 1.193,
+      "per_tx_p50_ms": 4333.002
+    }
+  ]
+}

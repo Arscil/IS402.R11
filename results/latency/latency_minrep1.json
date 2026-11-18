@@ -1,0 +1,20 @@
+{
+  "label": "minrep1",
+  "measured_at": "2026-11-18T12:24:07+00:00",
+  "client": "laptop, Viet Nam",
+  "rows": [
+    {
+      "region": "eastasia",
+      "mode": "cold_first_request",
+      "n": 1,
+      "tx_per_request": 1,
+      "mean_ms": 193.9,
+      "p50_ms": 193.9,
+      "p95_ms": 193.9,
+      "min_ms": 193.9,
+      "max_ms": 193.9,
+      "server_p50_ms": 0.414,
+      "per_tx_p50_ms": 193.904
+    }
+  ]
+}
