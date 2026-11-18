@@ -1,0 +1,159 @@
+RUN_ID=20261117T170338Z LABEL=vm_2vcpu EXPERIMENTS=core | 2 vCPU | Intel(R) Xeon(R) Platinum 8272CL CPU @ 2.60GHz
+
+=== Tải dữ liệu đã xử lý từ Blob (processed/latest) (17:03:38)
+  tải latest/clients_iid.npz (25.4 MB)
+  tải latest/clients_noniid.npz (25.4 MB)
+  tải latest/scaler.pkl (0.0 MB)
+  tải latest/test.npz (6.4 MB)
+  tải latest/train.npz (25.4 MB)
+Tải xong 82.6 MB trong 1.6s (50.5 MB/s)
+
+=== Huấn luyện tập trung (17:03:42)
+2026-11-17 17:03:48.453775: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-11-17 17:03:48.453880: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-11-17 17:03:48.469289: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+Train: (226980, 30) | Test: (56746, 30) | class weights: {0: 1.0, 1: 24.484202876062568}
+Epoch 1: loss=0.0653 | test precision=0.7103 recall=0.8000 f1=0.7525 pr_auc=0.7132
+Epoch 2: loss=0.0315 | test precision=0.6387 recall=0.8000 f1=0.7103 pr_auc=0.7182
+Epoch 3: loss=0.0267 | test precision=0.6609 recall=0.8000 f1=0.7238 pr_auc=0.7285
+Epoch 4: loss=0.0244 | test precision=0.5833 recall=0.8105 f1=0.6784 pr_auc=0.7309
+Epoch 5: loss=0.0221 | test precision=0.7732 recall=0.7895 f1=0.7812 pr_auc=0.7346
+Epoch 6: loss=0.0204 | test precision=0.6972 recall=0.8000 f1=0.7451 pr_auc=0.7482
+Epoch 7: loss=0.0184 | test precision=0.3721 recall=0.8421 f1=0.5161 pr_auc=0.7454
+Epoch 8: loss=0.0179 | test precision=0.6311 recall=0.8105 f1=0.7097 pr_auc=0.7408
+Epoch 9: loss=0.0159 | test precision=0.5338 recall=0.8316 f1=0.6502 pr_auc=0.7482
+Epoch 10: loss=0.0136 | test precision=0.2952 recall=0.8421 f1=0.4372 pr_auc=0.7442
+Thời gian huấn luyện: 15.87 giây
+Đã lưu mô hình: /home/azureuser/is402/models/centralized.keras
+Đã lưu lịch sử: /home/azureuser/is402/results/history_centralized.json
+
+=== FL-IID (17:04:21)
+2026-11-17 17:04:21.726275: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-11-17 17:04:21.726330: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-11-17 17:04:21.726361: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+Kịch bản: iid | 5 client | class weights: {0: 1.0, 1: 24.484202876062568}
+  Client 1: 45,396 mẫu, 75 gian lận (0.1652%)
+  Client 2: 45,396 mẫu, 75 gian lận (0.1652%)
+  Client 3: 45,396 mẫu, 76 gian lận (0.1674%)
+  Client 4: 45,396 mẫu, 76 gian lận (0.1674%)
+  Client 5: 45,396 mẫu, 76 gian lận (0.1674%)
+Round   1: train loss=0.0847 | test precision=0.6000 recall=0.7895 f1=0.6818 pr_auc=0.6878 | 7.78s
+Round   2: train loss=0.0365 | test precision=0.6466 recall=0.7895 f1=0.7109 pr_auc=0.7120 | 12.15s
+Round   3: train loss=0.0330 | test precision=0.5714 recall=0.8000 f1=0.6667 pr_auc=0.7138 | 16.51s
+Round   4: train loss=0.0308 | test precision=0.6410 recall=0.7895 f1=0.7075 pr_auc=0.7213 | 21.88s
+Round   5: train loss=0.0290 | test precision=0.6522 recall=0.7895 f1=0.7143 pr_auc=0.7252 | 27.49s
+Round   6: train loss=0.0281 | test precision=0.6063 recall=0.8105 f1=0.6937 pr_auc=0.7227 | 33.09s
+Round   7: train loss=0.0270 | test precision=0.6909 recall=0.8000 f1=0.7415 pr_auc=0.7267 | 37.51s
+Round   8: train loss=0.0258 | test precision=0.6909 recall=0.8000 f1=0.7415 pr_auc=0.7286 | 43.17s
+Round   9: train loss=0.0249 | test precision=0.6667 recall=0.8000 f1=0.7273 pr_auc=0.7291 | 47.77s
+Round  10: train loss=0.0239 | test precision=0.6609 recall=0.8000 f1=0.7238 pr_auc=0.7291 | 54.41s
+Round  11: train loss=0.0232 | test precision=0.6471 recall=0.8105 f1=0.7196 pr_auc=0.7276 | 59.03s
+Round  12: train loss=0.0226 | test precision=0.6814 recall=0.8105 f1=0.7404 pr_auc=0.7287 | 65.67s
+Round  13: train loss=0.0218 | test precision=0.6471 recall=0.8105 f1=0.7196 pr_auc=0.7277 | 70.06s
+Round  14: train loss=0.0216 | test precision=0.6525 recall=0.8105 f1=0.7230 pr_auc=0.7281 | 75.68s
+Round  15: train loss=0.0209 | test precision=0.6638 recall=0.8105 f1=0.7299 pr_auc=0.7282 | 80.03s
+Round  16: train loss=0.0203 | test precision=0.6638 recall=0.8105 f1=0.7299 pr_auc=0.7277 | 85.7s
+Round  17: train loss=0.0197 | test precision=0.6364 recall=0.8105 f1=0.7130 pr_auc=0.7261 | 90.07s
+Round  18: train loss=0.0192 | test precision=0.6471 recall=0.8105 f1=0.7196 pr_auc=0.7289 | 95.66s
+Round  19: train loss=0.0188 | test precision=0.6311 recall=0.8105 f1=0.7097 pr_auc=0.7288 | 101.26s
+Round  20: train loss=0.0181 | test precision=0.6471 recall=0.8105 f1=0.7196 pr_auc=0.7300 | 106.94s
+Round  21: train loss=0.0179 | test precision=0.6471 recall=0.8105 f1=0.7196 pr_auc=0.7289 | 112.54s
+Round  22: train loss=0.0177 | test precision=0.6471 recall=0.8105 f1=0.7196 pr_auc=0.7304 | 117.8s
+Round  23: train loss=0.0171 | test precision=0.6417 recall=0.8105 f1=0.7163 pr_auc=0.7299 | 124.39s
+Round  24: train loss=0.0169 | test precision=0.6016 recall=0.8105 f1=0.6906 pr_auc=0.7299 | 131.03s
+Round  25: train loss=0.0165 | test precision=0.6814 recall=0.8105 f1=0.7404 pr_auc=0.7350 | 136.64s
+Round  26: train loss=0.0162 | test precision=0.6260 recall=0.8105 f1=0.7064 pr_auc=0.7347 | 141.95s
+Round  27: train loss=0.0155 | test precision=0.6333 recall=0.8000 f1=0.7070 pr_auc=0.7354 | 147.55s
+Round  28: train loss=0.0155 | test precision=0.6281 recall=0.8000 f1=0.7037 pr_auc=0.7381 | 152.84s
+Round  29: train loss=0.0153 | test precision=0.6667 recall=0.8000 f1=0.7273 pr_auc=0.7334 | 158.45s
+Round  30: train loss=0.0148 | test precision=0.6333 recall=0.8000 f1=0.7070 pr_auc=0.7359 | 163.8s
+Thời gian huấn luyện: 163.8 giây
+Đã lưu mô hình: /home/azureuser/is402/models/fl_iid.keras
+Đã lưu lịch sử: /home/azureuser/is402/results/history_fl_iid.json
+
+=== FL-non-IID (17:07:15)
+2026-11-17 17:07:16.321954: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-11-17 17:07:16.322007: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-11-17 17:07:16.322038: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+Kịch bản: noniid | 5 client | class weights: {0: 1.0, 1: 24.484202876062568}
+  Client 1: 38,510 mẫu, 149 gian lận (0.3869%)
+  Client 2: 52,428 mẫu, 31 gian lận (0.0591%)
+  Client 3: 68,097 mẫu, 46 gian lận (0.0676%)
+  Client 4: 32,855 mẫu, 78 gian lận (0.2374%)
+  Client 5: 35,090 mẫu, 74 gian lận (0.2109%)
+Round   1: train loss=0.0789 | test precision=0.7979 recall=0.7895 f1=0.7937 pr_auc=0.6727 | 7.95s
+Round   2: train loss=0.0353 | test precision=0.7009 recall=0.7895 f1=0.7426 pr_auc=0.7061 | 12.57s
+Round   3: train loss=0.0322 | test precision=0.6726 recall=0.8000 f1=0.7308 pr_auc=0.6754 | 17.2s
+Round   4: train loss=0.0305 | test precision=0.6696 recall=0.7895 f1=0.7246 pr_auc=0.7150 | 21.55s
+Round   5: train loss=0.0284 | test precision=0.6522 recall=0.7895 f1=0.7143 pr_auc=0.7172 | 27.12s
+Round   6: train loss=0.0268 | test precision=0.6579 recall=0.7895 f1=0.7177 pr_auc=0.7210 | 31.97s
+Round   7: train loss=0.0259 | test precision=0.6579 recall=0.7895 f1=0.7177 pr_auc=0.7205 | 36.34s
+Round   8: train loss=0.0252 | test precision=0.7009 recall=0.7895 f1=0.7426 pr_auc=0.7223 | 41.16s
+Round   9: train loss=0.0240 | test precision=0.6881 recall=0.7895 f1=0.7353 pr_auc=0.7220 | 46.06s
+Round  10: train loss=0.0242 | test precision=0.7143 recall=0.7895 f1=0.7500 pr_auc=0.7168 | 50.42s
+Round  11: train loss=0.0234 | test precision=0.7353 recall=0.7895 f1=0.7614 pr_auc=0.7204 | 56.08s
+Round  12: train loss=0.0223 | test precision=0.7009 recall=0.7895 f1=0.7426 pr_auc=0.7216 | 60.65s
+Round  13: train loss=0.0217 | test precision=0.6818 recall=0.7895 f1=0.7317 pr_auc=0.7237 | 65.38s
+Round  14: train loss=0.0209 | test precision=0.6944 recall=0.7895 f1=0.7389 pr_auc=0.7226 | 70.95s
+Round  15: train loss=0.0206 | test precision=0.6818 recall=0.7895 f1=0.7317 pr_auc=0.7208 | 75.54s
+Round  16: train loss=0.0202 | test precision=0.7009 recall=0.7895 f1=0.7426 pr_auc=0.7196 | 80.3s
+Round  17: train loss=0.0195 | test precision=0.7075 recall=0.7895 f1=0.7463 pr_auc=0.7210 | 84.88s
+Round  18: train loss=0.0190 | test precision=0.6818 recall=0.7895 f1=0.7317 pr_auc=0.7211 | 89.27s
+Round  19: train loss=0.0186 | test precision=0.7075 recall=0.7895 f1=0.7463 pr_auc=0.7203 | 94.89s
+Round  20: train loss=0.0182 | test precision=0.6818 recall=0.7895 f1=0.7317 pr_auc=0.7195 | 100.58s
+Round  21: train loss=0.0179 | test precision=0.6881 recall=0.7895 f1=0.7353 pr_auc=0.7194 | 104.94s
+Round  22: train loss=0.0175 | test precision=0.7009 recall=0.7895 f1=0.7426 pr_auc=0.7191 | 109.41s
+Round  23: train loss=0.0172 | test precision=0.6944 recall=0.7895 f1=0.7389 pr_auc=0.7181 | 113.83s
+Round  24: train loss=0.0167 | test precision=0.7075 recall=0.7895 f1=0.7463 pr_auc=0.7176 | 119.41s
+Round  25: train loss=0.0164 | test precision=0.6881 recall=0.7895 f1=0.7353 pr_auc=0.7196 | 124.72s
+Round  26: train loss=0.0161 | test precision=0.6881 recall=0.7895 f1=0.7353 pr_auc=0.7193 | 131.03s
+Round  27: train loss=0.0159 | test precision=0.6881 recall=0.7895 f1=0.7353 pr_auc=0.7195 | 135.54s
+Round  28: train loss=0.0156 | test precision=0.6818 recall=0.7895 f1=0.7317 pr_auc=0.7216 | 140.23s
+Round  29: train loss=0.0159 | test precision=0.6916 recall=0.7789 f1=0.7327 pr_auc=0.7101 | 145.47s
+Round  30: train loss=0.0160 | test precision=0.6916 recall=0.7789 f1=0.7327 pr_auc=0.7146 | 149.99s
+Thời gian huấn luyện: 149.99 giây
+Đã lưu mô hình: /home/azureuser/is402/models/fl_noniid.keras
+Đã lưu lịch sử: /home/azureuser/is402/results/history_fl_noniid.json
+
+=== Đánh giá (17:09:54)
+2026-11-17 17:09:55.848495: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-11-17 17:09:55.848549: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-11-17 17:09:55.848579: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+Tập test: 56,746 mẫu, 95 gian lận | tập validation chọn ngưỡng: 22,698 mẫu, 38 gian lận
+     model  accuracy  precision  recall     f1  roc_auc  pr_auc  tp  fp  fn
+ Tập trung    0.9964     0.2952  0.8421 0.4372   0.9615  0.7442  80 191  15
+    FL-IID    0.9989     0.6333  0.8000 0.7070   0.9635  0.7359  76  44  19
+FL-non-IID    0.9990     0.6916  0.7789 0.7327   0.9621  0.7146  74  33  21
+
+Với ngưỡng tối ưu F1 (chọn trên validation):
+     model  threshold_tuned  precision_tuned  recall_tuned  f1_tuned  tp_tuned  fp_tuned  fn_tuned
+ Tập trung           0.9677           0.8571        0.7579    0.8045        72        12        23
+    FL-IID           0.9481           0.8875        0.7474    0.8114        71         9        24
+FL-non-IID           0.9114           0.8974        0.7368    0.8092        70         8        25
+Đã lưu bảng và biểu đồ vào: /home/azureuser/is402/results
+
+=== Đẩy mô hình và kết quả lên Blob (models/runs/20261117T170338Z/) (17:10:04)
+  đẩy runs/20261117T170338Z/models/centralized.keras (0.09 MB)
+  đẩy runs/20261117T170338Z/models/fl_iid.keras (0.03 MB)
+  đẩy runs/20261117T170338Z/models/fl_noniid.keras (0.03 MB)
+Đẩy xong 0.1 MB trong 0.1s
+  đẩy runs/20261117T170338Z/results/blob_benchmark_vm_4vcpu.csv (0.00 MB)
+  đẩy runs/20261117T170338Z/results/blob_benchmark_vm_4vcpu.json (0.00 MB)
+  đẩy runs/20261117T170338Z/results/blob_benchmark_vm_4vcpu_gb.csv (0.00 MB)
+  đẩy runs/20261117T170338Z/results/blob_benchmark_vm_4vcpu_gb.json (0.00 MB)
+  đẩy runs/20261117T170338Z/results/fig_blob_benchmark_vm_4vcpu.png (0.08 MB)
+  đẩy runs/20261117T170338Z/results/fig_blob_benchmark_vm_4vcpu_gb.png (0.08 MB)
+  đẩy runs/20261117T170338Z/results/fig_confusion_matrices.png (0.06 MB)
+  đẩy runs/20261117T170338Z/results/fig_metrics_comparison.png (0.09 MB)
+  đẩy runs/20261117T170338Z/results/fig_roc_pr_curves.png (0.16 MB)
+  đẩy runs/20261117T170338Z/results/fig_threshold_tuning.png (0.11 MB)
+  đẩy runs/20261117T170338Z/results/fig_training_curves.png (0.37 MB)
+  đẩy runs/20261117T170338Z/results/fig_training_time.png (0.05 MB)
+  đẩy runs/20261117T170338Z/results/history_centralized.json (0.00 MB)
+  đẩy runs/20261117T170338Z/results/history_fl_iid.json (0.02 MB)
+  đẩy runs/20261117T170338Z/results/history_fl_noniid.json (0.02 MB)
+  đẩy runs/20261117T170338Z/results/metrics_summary.csv (0.00 MB)
+  đẩy runs/20261117T170338Z/results/metrics_summary.json (0.00 MB)
+Đẩy xong 1.1 MB trong 0.3s
+
+XONG 20261117T170338Z

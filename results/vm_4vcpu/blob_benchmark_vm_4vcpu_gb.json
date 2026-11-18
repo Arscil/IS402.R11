@@ -1,0 +1,30 @@
+{
+  "account": "stis402flfraud",
+  "machine": "Linux-6.8.0-1070-azure-x86_64-with-glibc2.35",
+  "rows": [
+    {
+      "label": "vm_4vcpu_gb",
+      "file": "creditcard_x15.csv",
+      "format": "csv",
+      "size_mb": 2325.0,
+      "concurrency": 4,
+      "upload_sec": 15.17,
+      "upload_mbps": 153.3,
+      "download_sec": 11.68,
+      "download_mbps": 199.07,
+      "pandas_read_sec": 30.44
+    },
+    {
+      "label": "vm_4vcpu_gb",
+      "file": "creditcard_x15.parquet",
+      "format": "parquet",
+      "size_mb": 1051.0,
+      "concurrency": 4,
+      "upload_sec": 5.32,
+      "upload_mbps": 197.38,
+      "download_sec": 6.2,
+      "download_mbps": 169.42,
+      "pandas_read_sec": 1.25
+    }
+  ]
+}

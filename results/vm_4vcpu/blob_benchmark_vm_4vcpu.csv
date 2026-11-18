@@ -1,0 +1,4 @@
+label,file,format,size_mb,concurrency,upload_sec,upload_mbps,download_sec,download_mbps,pandas_read_sec
+vm_4vcpu,creditcard.csv,csv,143.8,1,3.18,45.22,2.61,55.2,1.65
+vm_4vcpu,creditcard.csv,csv,143.8,4,0.95,150.98,0.65,220.99,1.65
+vm_4vcpu,creditcard.csv,csv,143.8,8,0.74,193.8,0.58,248.94,1.65
