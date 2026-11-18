@@ -43,7 +43,10 @@ def get_credential():
     authentication record (account name, tenant, no secret) is kept in AUTH_RECORD.
     """
     from azure.identity import (AuthenticationRecord, AzureCliCredential, ChainedTokenCredential,
-                                InteractiveBrowserCredential, TokenCachePersistenceOptions)
+                                DefaultAzureCredential, InteractiveBrowserCredential,
+                                TokenCachePersistenceOptions)
+    if os.environ.get("USE_MANAGED_IDENTITY") == "1":  # on the Azure VM
+        return DefaultAzureCredential()
     cache = TokenCachePersistenceOptions(name="is402_fl_fraud")
     record = None
     if AUTH_RECORD.exists():
