@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phát hiện gian lận thẻ tín dụng</title>
+  <meta name="description" content="Gọi API mô hình học liên kết (TensorFlow Federated) triển khai trên Azure Container Apps để phát hiện giao dịch gian lận.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div>
+      <h1>Phát hiện gian lận thẻ tín dụng</h1>
+      <p class="sub">Mô hình học liên kết (FedAvg, TensorFlow Federated) chạy trên Azure Container Apps</p>
+    </div>
+    <label class="region-pick">
+      <span>API region</span>
+      <select id="region"></select>
+    </label>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card" id="status-card">
+    <div class="card-head">
+      <h2>Trạng thái API</h2>
+      <button class="btn ghost" id="btn-refresh" type="button">Kiểm tra lại</button>
+    </div>
+    <div class="status-grid">
+      <div class="stat"><span class="stat-label">Trạng thái</span><span class="stat-value" id="st-health">…</span></div>
+      <div class="stat"><span class="stat-label">Mô hình</span><span class="stat-value" id="st-model">…</span></div>
+      <div class="stat"><span class="stat-label">Ngưỡng quyết định</span><span class="stat-value" id="st-threshold">…</span></div>
+      <div class="stat"><span class="stat-label">F1 / Precision / Recall (test)</span><span class="stat-value" id="st-metrics">…</span></div>
+      <div class="stat"><span class="stat-label">Thời gian phản hồi</span><span class="stat-value" id="st-latency">…</span></div>
+    </div>
+    <p class="hint" id="st-note"></p>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>1. Dự đoán một giao dịch</h2></div>
+    <div class="row">
+      <label class="field grow">
+        <span>Giao dịch mẫu (lấy từ tập test)</span>
+        <select id="sample"></select>
+      </label>
+      <label class="field">
+        <span>Time (giây)</span>
+        <input id="f-Time" type="number" step="any">
+      </label>
+      <label class="field">
+        <span>Amount</span>
+        <input id="f-Amount" type="number" step="any" min="0">
+      </label>
+    </div>
+    <details class="pca">
+      <summary>V1 – V28 (thành phần PCA ẩn danh)</summary>
+      <div class="pca-grid" id="pca-grid"></div>
+    </details>
+    <div class="actions">
+      <button class="btn" id="btn-predict" type="button">Dự đoán</button>
+      <button class="btn ghost" id="btn-random" type="button">Điền ngẫu nhiên (V ~ N(0,1))</button>
+    </div>
+    <div class="result" id="single-result" hidden>
+      <div class="verdict" id="verdict"></div>
+      <div class="prob">
+        <div class="prob-bar"><div class="prob-fill" id="prob-fill"></div><div class="prob-thr" id="prob-thr"></div></div>
+        <div class="prob-legend"><span>0</span><span id="prob-text"></span><span>1</span></div>
+      </div>
+      <dl class="meta" id="single-meta"></dl>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>2. Dự đoán hàng loạt từ file CSV</h2></div>
+    <p class="hint">Cột bắt buộc: <code>Time, V1…V28, Amount</code>. Có thêm cột <code>Class</code> thì trang tự tính độ chính xác. Tối đa 1.000 dòng mỗi request, file lớn hơn được chia lô tự động.
+      <a href="#" id="dl-sample">Tải file CSV mẫu</a></p>
+    <div class="row">
+      <input type="file" id="csv" accept=".csv,text/csv">
+      <button class="btn" id="btn-batch" type="button" disabled>Gửi lên API</button>
+    </div>
+    <div id="batch-summary" class="batch-summary" hidden></div>
+    <div class="table-wrap" id="batch-table-wrap" hidden>
+      <table id="batch-table">
+        <thead><tr><th>#</th><th>Amount</th><th>Xác suất gian lận</th><th>Dự đoán</th><th>Thực tế</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>3. Đo độ trễ từ trình duyệt</h2></div>
+    <p class="hint">Gửi 20 request (1 giao dịch mỗi request) tới từng region và tính trung vị thời gian khứ hồi. Request đầu có thể chậm vài giây nếu app đang tắt (cold start).</p>
+    <button class="btn" id="btn-latency" type="button">Đo độ trễ</button>
+    <div class="table-wrap" id="lat-wrap" hidden>
+      <table id="lat-table">
+        <thead><tr><th>Region</th><th>Request đầu</th><th>p50</th><th>p95</th><th>Xử lý trên server (p50)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  Đồ án IS402 – Điện toán đám mây · Dữ liệu: Credit Card Fraud Detection (Kaggle) ·
+  API: Azure Container Apps (East Asia, Central India) · Trang tĩnh: Azure Blob Storage static website
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
