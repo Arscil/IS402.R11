@@ -1369,7 +1369,12 @@ a:hover {
   }
 
   .hero-content {
-    max-width: 540px;
+    max-width: 58%;
+  }
+
+  /* Thẻ nổi bị cắt ở mép phải khi màn hình hẹp */
+  .hero-visual .floating-card {
+    display: none;
   }
 }
 
@@ -1420,9 +1425,13 @@ a:hover {
     max-width: 100%;
   }
 
+  /* Màn hình hẹp không đủ chỗ cho hình trang trí: ẩn đi để không đè lên chữ */
   .hero-visual {
-    right: -180px;
-    opacity: .22;
+    display: none;
+  }
+
+  .hero {
+    min-height: 0;
   }
 
   .card {
